@@ -1,0 +1,187 @@
+SELECT ENAME AS "EMPLOYEE NAME", SAL AS "SALARY" 
+FROM EMP
+ORDER BY SAL DESC
+
+SELECT *
+FROM EMP
+ORDER BY SAL ASC
+
+SELECT DEPTNO, SAL, ENAME FROM EMP
+ORDER BY DEPTNO, SAL
+
+
+
+Same:
+SELECT 'My name is ' || ENAME
+FROM EMP;
+
+SELECT CONCAT('My name is ', ENAME)
+FROM EMP
+
+SELECT LOWER('hello') 
+FROM DUAL
+*DUAL results a single row
+
+Function within a function:
+SELECT CONCAT(LOWER(ENAME), ' is the name.') FROM EMP
+
+Example of creating sentences using CONCAT:
+SELECT CONCAT(LOWER(ENAME), upper(' is the name and their job is:'))|| JOB FROM EMP
+
+SELECT CONCAT(CONCAT(LOWER(ENAME), upper(' is the name')), CONCAT(' and their job is: ', JOB)) AS "FUNCTION CALL" FROM EMP
+
+
+SELECT INITCAP('this is my sql database') from dual
+result: This Is My Sql Database
+
+
+3 ARGUMENTS: WHERE TO START AND HOW MANY TO EXTRACT
+SUBSTR('HELLO', 2, 2)
+* IF 3RD ARGUMENT IS LEFT OUT, IT WILL EXTRACT FROM 2 CHARACTER TO THE END
+
+LPAD SHIFTS THE WORD TO THE LEFT AND ADS % TO MAKE 10 CHARACTERS
+SELECT LPAD('HELLO', 10, '%') FROM DUAL
+
+RPAD DOES THE SAME THING IN VICE VERSA
+*REMEMBER TO PASS 3 AGRUMENTS
+- LTRIM
+- RTRIM
+
+ROUNDING NUMBERS. TAKES ARGUMENT OF ,2 TO ROUND DECIMAL PLACES
+SELECT ROUND(107.088, 2) FROM DUAL
+
+TRUNC NUMBER: 
+SELECT TRUNC(107.54648, 2) FROM DUAL
+
+
+ADDS MONTHS TO THE SELECTED DATE WITH ARGUMENT. DATE IS IN ''
+SELECT ADD_MONTHS('11/17/2012', 3) FROM DUAL 
+
+
+SELECT MONTHS_BETWEEN('12/15/2012', '12/4/2013') AS "DATE" FROM DUAL
+
+SELECT TRUNC(SYSTIMESTAMP) FROM DUAL
+
+SELECT ENAME, HIREDATE, TRUNC(HIREDATE, 'MONTH') FROM EMP
+WHERE TRUNC(HIREDATE, 'YEAR') = '01/01/1982'
+
+
+NULL FUNCTION
+select ename, length(ename), nvl(nullif(to_char(length(ename)), to_char(5)), 'Length is 5') from emp
+
+
+Section4
+Lesson25
+select * from emp
+
+select max(sal) as Max_Sal from emp
+select min(sal) as Min_Sal from emp
+
+select sum(sal) as Sum_Sal from emp
+
+select max(sal) as Max_Sal from emp
+where job = 'MANAGER'
+
+select avg(sal) from emp
+
+select count(comm) as Count from emp
+
+select sum(sal) / count(*) as Computer_avg, avg(sal) as Native_avg from emp
+
+select sum(sal) + avg(sal) as Computed_avg from emp
+
+select sum(sal) as Sum, avg(sal) as Average, max(sal) as Max_Sal, min(sal) as Min_sal, count(*) from emp
+
+select avg(sal) from emp
+where job = 'SALESMAN'
+
+select avg(sal) from emp
+where job = 'CLERK'
+
+select avg(sal) from emp
+where job = 'MANAGER'
+
+SECTION 4 / GROUPING FUNCTIONS
+GROUPING FUNCTIONS SYNTAX:
+1. select count(*), job
+2. from emp
+3. where
+4. group by job
+5. having count(*) = 2
+6. order by
+
+Order Syntax
+SELECT col_1, col_2, col_3, group_function(aggregate_expression)
+FROM tables
+[ WHERE conditions ]
+GROUP BY col_1, col_2, col_3 ...col_n
+[ ORDER BY conditions ]
+
+select * from emp
+
+select count(*), job
+from emp
+group by job
+
+select min(sal), job
+from emp
+group by job
+
+select job
+from emp
+group by job
+
+select distinct job from emp
+
+select count(*), job
+from emp
+-- where count(*) = 2
+group by job
+
+1. select count(*), job
+2. from emp
+3. where
+4. group by job
+5. having count(*) = 2
+6. order by
+
+select deptno, count(*)
+from emp
+group by deptno
+having count(*) > 3
+
+
+select * from emp
+
+select job, count(*) from emp
+group by job
+
+select job, deptno, count(*) from emp
+group by job, deptno
+
+select job, deptno from emp
+
+JOINS
+select * 
+from emp, dept
+where emp.deptno = dept.deptno
+
+
+SEARCH BY USING 2 COLUMS WHERE TABLES HAVE 2 FIELDS CONTAINING THE SAME DATA
+employee has a manager. who is the manager
+--------------------------------------------
+SELECT e.ename employee, m.ename manager
+FROM emp e, emp m
+WHERE e.mgr = m.empno
+
+NON-EQUIJOIN example
+SELECT e.ename, e.sal, j.grade_level
+FROM emp e JOIN job_grade j
+ON e.sal
+BETWEEN j.lowest_sal AND j.highest_sal
+
+
+PARTITIONS
+SELECT b.*,
+count(*) over(partition by colour) total_count_in_table
+from bricks b;
